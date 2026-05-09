@@ -7,15 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, Mail, Lock } from "lucide-react";
 import { toast } from "sonner";
 
 export default function CadastroPage() {
@@ -52,26 +44,29 @@ export default function CadastroPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
-      <div className="w-full max-w-md">
-        <div className="flex items-center justify-center gap-2 mb-8">
-          <div className="p-2 bg-primary rounded-lg">
-            <TrendingUp className="h-6 w-6 text-primary-foreground" />
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <div className="w-full max-w-sm">
+        {/* Logo */}
+        <div className="flex flex-col items-center mb-8">
+          <div className="p-3 bg-primary rounded-2xl mb-4 shadow-lg shadow-primary/25">
+            <TrendingUp className="h-7 w-7 text-primary-foreground" />
           </div>
-          <span className="text-2xl font-bold">FinançasPro</span>
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-violet-500 bg-clip-text text-transparent">
+            FinançasPro
+          </h1>
+          <p className="text-muted-foreground text-sm mt-1">Seu controle financeiro pessoal</p>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl">Criar conta grátis</CardTitle>
-            <CardDescription>
-              Comece a controlar suas finanças hoje mesmo
-            </CardDescription>
-          </CardHeader>
-          <form onSubmit={handleCadastro}>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">E-mail</Label>
+        {/* Card */}
+        <div className="bg-card border rounded-2xl p-7 shadow-sm">
+          <h2 className="text-xl font-semibold mb-1">Criar conta</h2>
+          <p className="text-muted-foreground text-sm mb-6">Comece a controlar suas finanças</p>
+
+          <form onSubmit={handleCadastro} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">E-mail</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="email"
                   type="email"
@@ -80,10 +75,15 @@ export default function CadastroPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   autoComplete="email"
+                  className="pl-10"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Senha</Label>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password">Senha</Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="password"
                   type="password"
@@ -92,22 +92,23 @@ export default function CadastroPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   autoComplete="new-password"
+                  className="pl-10"
                 />
               </div>
-            </CardContent>
-            <CardFooter className="flex flex-col gap-4">
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Criando conta..." : "Criar conta"}
-              </Button>
-              <p className="text-sm text-muted-foreground text-center">
-                Já tem conta?{" "}
-                <Link href="/login" className="text-primary hover:underline font-medium">
-                  Entrar
-                </Link>
-              </p>
-            </CardFooter>
+            </div>
+
+            <Button type="submit" className="w-full h-11 mt-2" disabled={loading}>
+              {loading ? "Criando conta..." : "Criar conta grátis"}
+            </Button>
           </form>
-        </Card>
+
+          <p className="text-sm text-muted-foreground text-center mt-5">
+            Já tem conta?{" "}
+            <Link href="/login" className="text-primary hover:underline font-medium">
+              Entrar
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

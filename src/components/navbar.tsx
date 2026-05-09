@@ -2,9 +2,19 @@
 
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, LayoutDashboard, ArrowLeftRight, LogOut, Menu, X } from "lucide-react";
+import {
+  TrendingUp,
+  LayoutDashboard,
+  ArrowLeftRight,
+  LogOut,
+  Menu,
+  X,
+  Sun,
+  Moon,
+} from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -18,9 +28,10 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const supabase = createClient();
+  const { theme, setTheme } = useTheme();
 
   async function handleLogout() {
+    const supabase = createClient();
     await supabase.auth.signOut();
     toast.success("Saiu com sucesso.");
     router.push("/login");
@@ -28,14 +39,16 @@ export function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 border-b bg-card/80 backdrop-blur-md">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
-          <Link href="/dashboard" className="flex items-center gap-2 font-bold text-lg">
-            <div className="p-1.5 bg-primary rounded-md">
+          <Link href="/dashboard" className="flex items-center gap-2.5 font-bold text-lg">
+            <div className="p-1.5 bg-primary rounded-lg">
               <TrendingUp className="h-4 w-4 text-primary-foreground" />
             </div>
-            FinançasPro
+            <span className="bg-gradient-to-r from-primary to-violet-500 bg-clip-text text-transparent">
+              FinançasPro
+            </span>
           </Link>
 
           {/* Desktop nav */}
@@ -45,10 +58,10 @@ export function Navbar() {
                 key={href}
                 href={href}
                 className={cn(
-                  "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                  "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all",
                   pathname === href
-                    ? "bg-muted text-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
                 )}
               >
                 <Icon className="h-4 w-4" />
@@ -57,19 +70,30 @@ export function Navbar() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="text-muted-foreground hover:text-foreground"
+              aria-label="Alternar tema"
+            >
+              <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            </Button>
+
             <Button
               variant="ghost"
               size="sm"
               onClick={handleLogout}
-              className="hidden md:flex items-center gap-2 text-muted-foreground"
+              className="hidden md:flex items-center gap-2 text-muted-foreground hover:text-foreground"
             >
               <LogOut className="h-4 w-4" />
               Sair
             </Button>
 
             <button
-              className="md:hidden p-2 rounded-md"
+              className="md:hidden p-2 rounded-md text-muted-foreground hover:text-foreground"
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Menu"
             >
@@ -81,17 +105,17 @@ export function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t bg-background px-4 py-3 space-y-1">
+        <div className="md:hidden border-t bg-card px-4 py-3 space-y-1">
           {navLinks.map(({ href, label, icon: Icon }) => (
             <Link
               key={href}
               href={href}
               onClick={() => setMobileOpen(false)}
               className={cn(
-                "flex items-center gap-2 px-3 py-2.5 rounded-md text-sm font-medium transition-colors",
+                "flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-all",
                 pathname === href
-                  ? "bg-muted text-foreground"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
               )}
             >
               <Icon className="h-4 w-4" />
@@ -100,7 +124,7 @@ export function Navbar() {
           ))}
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 px-3 py-2.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground w-full"
+            className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground w-full"
           >
             <LogOut className="h-4 w-4" />
             Sair
